@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'my_drf_db',
+        'USER': 'drf_user',
+        'PASSWORD': 'drf_password',
+        'HOST': 'db', 
+        'PORT': '5432',
     }
 }
 
@@ -128,10 +132,11 @@ REST_FRAMEWORK = {
     )
 }
 # Redis broker URL
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 # Redis result backend
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
 
 # Optional but recommended settings
 CELERY_ACCEPT_CONTENT = ["json"]
