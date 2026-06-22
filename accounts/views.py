@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -16,11 +15,11 @@ class UserRegisterview(APIView):
     def post(self, request):
         serializer = UserRegisterserializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user_register(
+        out = user_register(
             username=serializer.validated_data['username'],
             password=serializer.validated_data['password']
         )
-        return Response({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
+        return Response({"message": "User registered successfully." , "user": out.username}, status=status.HTTP_201_CREATED)
 
 class UserProfileUpdateview(APIView):
     """
