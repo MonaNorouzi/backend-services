@@ -1,0 +1,41 @@
+
+services:
+  db:
+    image: postgres:15
+    container_name: my_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: ***DB_NAME_REMOVED***
+      POSTGRES_USER: ***DB_USER_REMOVED***
+      POSTGRES_PASSWORD: ***DB_PASSWORD_REMOVED***
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    container_name: my_redis_broker
+    restart: always
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    container_name: drf_backend
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    build: .
+    container_name: drf_celery_worker
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
